@@ -1,52 +1,54 @@
 ﻿{% extends 'onlinecourse/base.html' %}
 {% block content %}
-<h2 class="title">{{ course.name }}</h2>
-<p class="muted">{{ course.description|default:'No description available.' }}</p>
+<div class="container mt-4">
+    <h2 class="title">{{ course.name }}</h2>
+    <p class="muted">{{ course.description|default:'No description available.' }}</p>
 
-<section class="card" style="margin-bottom:1rem;">
-    <h3 style="margin-top:0;">Lessons</h3>
-    {% for lesson in course.lesson_set.all %}
-        <div style="padding:0.5rem 0; border-bottom:1px solid #e5e7eb;">
-            <strong>Lesson {{ lesson.order }}:</strong> {{ lesson.title }}
-            {% if lesson.content %}
-                <p class="muted" style="margin:0.35rem 0 0;">{{ lesson.content }}</p>
-            {% endif %}
-        </div>
-    {% empty %}
-        <p class="muted">No lessons available for this course.</p>
-    {% endfor %}
-</section>
+    <section class="card mb-3">
+        <h3 class="h5" style="margin-top:0;">Lessons</h3>
+        {% for lesson in course.lesson_set.all %}
+            <div class="py-2 border-bottom">
+                <strong>Lesson {{ lesson.order }}:</strong> {{ lesson.title }}
+                {% if lesson.content %}
+                    <p class="muted mb-0 mt-1">{{ lesson.content }}</p>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p class="muted">No lessons available for this course.</p>
+        {% endfor %}
+    </section>
 
-{% if not enrolled %}
-<div class="card stack" style="max-width:680px;">
-    <p style="margin:0;">You are not enrolled in this course yet.</p>
-    <form method="post" action="{% url 'onlinecourse:enroll' course.id %}">
-        {% csrf_token %}
-        <button class="btn" type="submit">Enroll to Start Exam</button>
-    </form>
-</div>
-{% else %}
-<form class="stack" method="post" action="{% url 'onlinecourse:submit' course.id %}">
-    {% csrf_token %}
-    {% for question in course.question_set.all %}
-        <section class="card">
-            <h4 style="margin:0 0 0.55rem;">Q{{ forloop.counter }}. {{ question.question_text }}</h4>
-            <p class="muted" style="margin:0 0 0.4rem; font-size:0.92rem;">Marks: {{ question.grade }}</p>
-            {% for choice in question.choice_set.all %}
-                <label class="choice">
-                    <input type="checkbox" name="choice{{ choice.id }}" value="{{ choice.id }}" />
-                    {{ choice.choice_text }}
-                </label>
-            {% empty %}
-                <p class="muted" style="margin:0;">No choices for this question.</p>
-            {% endfor %}
-        </section>
-    {% empty %}
-        <div class="card"><p style="margin:0;">No questions yet. Add from admin.</p></div>
-    {% endfor %}
-    <div>
-        <button class="btn" type="submit">Submit Exam</button>
+    {% if not enrolled %}
+    <div class="card stack" style="max-width:680px;">
+        <p style="margin:0;">You are not enrolled in this course yet.</p>
+        <form method="post" action="{% url 'onlinecourse:enroll' course.id %}">
+            {% csrf_token %}
+            <button class="btn btn-primary" type="submit">Enroll to Start Exam</button>
+        </form>
     </div>
-</form>
-{% endif %}
+    {% else %}
+    <form class="stack" method="post" action="{% url 'onlinecourse:submit' course.id %}">
+        {% csrf_token %}
+        {% for question in course.question_set.all %}
+            <section class="card">
+                <h4 style="margin:0 0 0.55rem;">Q{{ forloop.counter }}. {{ question.question_text }}</h4>
+                <p class="muted" style="margin:0 0 0.4rem; font-size:0.92rem;">Marks: {{ question.grade }}</p>
+                {% for choice in question.choice_set.all %}
+                    <label class="choice form-check-label d-block">
+                        <input class="form-check-input" type="checkbox" name="choice{{ choice.id }}" value="{{ choice.id }}" />
+                        {{ choice.choice_text }}
+                    </label>
+                {% empty %}
+                    <p class="muted" style="margin:0;">No choices for this question.</p>
+                {% endfor %}
+            </section>
+        {% empty %}
+            <div class="card"><p style="margin:0;">No questions yet. Add from admin.</p></div>
+        {% endfor %}
+        <div>
+            <button class="btn btn-primary" type="submit">Submit Exam</button>
+        </div>
+    </form>
+    {% endif %}
+</div>
 {% endblock %}
