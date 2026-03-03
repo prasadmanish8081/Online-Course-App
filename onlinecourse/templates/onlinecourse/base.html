@@ -1,0 +1,167 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Online Course</title>
+    <style>
+        :root {
+            --bg-1: #f8f5ef;
+            --bg-2: #eef3fb;
+            --ink: #1f2937;
+            --muted: #6b7280;
+            --card: #ffffff;
+            --line: #d5dce8;
+            --brand: #0f766e;
+            --brand-dark: #115e59;
+            --accent: #f59e0b;
+            --ok: #166534;
+            --bad: #991b1b;
+            --shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            color: var(--ink);
+            font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
+            background: radial-gradient(circle at top left, var(--bg-2), var(--bg-1) 55%);
+            min-height: 100vh;
+        }
+
+        .shell {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 1.25rem 1rem 2rem;
+        }
+
+        .topbar {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+            padding: 0.9rem 1rem;
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            text-decoration: none;
+            color: var(--ink);
+            font-weight: 700;
+            letter-spacing: 0.2px;
+        }
+
+        .meta {
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            font-size: 0.95rem;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+            padding: 1rem;
+        }
+
+        .muted { color: var(--muted); }
+
+        .btn {
+            display: inline-block;
+            padding: 0.55rem 0.9rem;
+            border-radius: 10px;
+            border: 1px solid var(--brand);
+            background: var(--brand);
+            color: #fff;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .btn:hover { background: var(--brand-dark); }
+
+        .btn-outline {
+            background: #fff;
+            color: var(--brand);
+        }
+
+        .btn-outline:hover {
+            background: #f0fdfa;
+            color: var(--brand-dark);
+        }
+
+        .title {
+            margin: 1.2rem 0 0.35rem;
+            font-size: 1.55rem;
+        }
+
+        .stack { display: grid; gap: 0.9rem; }
+
+        .grid {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        }
+
+        .chip {
+            display: inline-block;
+            font-size: 0.8rem;
+            background: #ecfeff;
+            color: #155e75;
+            border: 1px solid #bae6fd;
+            border-radius: 999px;
+            padding: 0.15rem 0.6rem;
+        }
+
+        .inline { display: inline; }
+
+        input[type="checkbox"] {
+            width: 17px;
+            height: 17px;
+            accent-color: var(--brand);
+            vertical-align: middle;
+            margin-right: 0.4rem;
+        }
+
+        .choice {
+            display: block;
+            padding: 0.45rem 0.5rem;
+            border-radius: 8px;
+            margin: 0.3rem 0;
+        }
+
+        .choice:hover { background: #f8fafc; }
+
+        @media (max-width: 640px) {
+            .title { font-size: 1.35rem; }
+            .shell { padding: 1rem 0.7rem 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="shell">
+        <header class="topbar">
+            <a class="brand" href="/">Online Course App</a>
+            <div class="meta">
+                {% if user.is_authenticated %}
+                    <span>Hi, {{ user.username }}</span>
+                    <form method="post" class="inline" action="{% url 'logout' %}">{% csrf_token %}<button class="btn btn-outline" type="submit">Logout</button></form>
+                {% else %}
+                    <a class="btn btn-outline" href="{% url 'login' %}">Login</a>
+                {% endif %}
+            </div>
+        </header>
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

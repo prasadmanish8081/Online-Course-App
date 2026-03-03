@@ -1,0 +1,24 @@
+﻿{% extends 'onlinecourse/base.html' %}
+{% block content %}
+<h2 class="title">Available Courses</h2>
+<p class="muted">Enroll and start your exam directly from the course page.</p>
+
+{% if courses %}
+    <div class="grid">
+        {% for course in courses %}
+            <article class="card stack">
+                <span class="chip">Course {{ forloop.counter }}</span>
+                <h3 style="margin:0;">{{ course.name }}</h3>
+                <p class="muted" style="margin:0;">{{ course.description|default:'No description added yet.' }}</p>
+                <div>
+                    <a class="btn" href="{% url 'onlinecourse:course_detail' course.id %}">Open Course</a>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="card">
+        <p style="margin:0;">No courses available. Create one from admin.</p>
+    </div>
+{% endif %}
+{% endblock %}

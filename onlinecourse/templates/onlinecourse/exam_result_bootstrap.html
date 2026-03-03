@@ -1,0 +1,44 @@
+﻿{% extends 'onlinecourse/base.html' %}
+{% block content %}
+<h2 class="title">Exam Result</h2>
+<div class="card" style="margin-bottom:1rem;">
+    <p style="margin:0 0 0.45rem;"><strong>Course:</strong> {{ course.name }}</p>
+    {% if is_passed %}
+        <p style="margin:0.2rem 0 0.5rem; color:var(--ok); font-weight:700;">Congratulations! You have successfully passed the exam.</p>
+    {% else %}
+        <p style="margin:0.2rem 0 0.5rem; color:var(--bad); font-weight:700;">Keep practicing. You can retake the exam.</p>
+    {% endif %}
+    <p style="margin:0; font-size:1.1rem;"><strong>Score:</strong>
+        {% if grade_percent >= 80 %}
+            <span style="color:var(--ok);">{{ grade_percent }}%</span>
+        {% elif grade_percent >= 50 %}
+            <span style="color:var(--accent);">{{ grade_percent }}%</span>
+        {% else %}
+            <span style="color:var(--bad);">{{ grade_percent }}%</span>
+        {% endif %}
+    </p>
+</div>
+
+<div class="stack">
+{% for question in course.question_set.all %}
+    <section class="card">
+        <h4 style="margin:0 0 0.55rem;">Q{{ forloop.counter }}. {{ question.question_text }}</h4>
+        {% for choice in question.choice_set.all %}
+            <div class="choice" style="background:{% if choice.id in selected_choice_ids and choice.is_correct %}#ecfdf5{% elif choice.id in selected_choice_ids %}#fef2f2{% elif choice.is_correct %}#fffbeb{% else %}transparent{% endif %};">
+                {% if choice.id in selected_choice_ids %}
+                    <strong>[Selected]</strong>
+                {% endif %}
+                {{ choice.choice_text }}
+                {% if choice.is_correct %}
+                    <strong>(Correct)</strong>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </section>
+{% endfor %}
+</div>
+
+<p style="margin-top:1rem;">
+    <a class="btn btn-outline" href="{% url 'onlinecourse:course_detail' course.id %}">Try Again</a>
+</p>
+{% endblock %}

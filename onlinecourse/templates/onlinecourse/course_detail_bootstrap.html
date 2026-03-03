@@ -1,0 +1,38 @@
+﻿{% extends 'onlinecourse/base.html' %}
+{% block content %}
+<h2 class="title">{{ course.name }}</h2>
+<p class="muted">{{ course.description|default:'No description available.' }}</p>
+
+{% if not enrolled %}
+<div class="card stack" style="max-width:680px;">
+    <p style="margin:0;">You are not enrolled in this course yet.</p>
+    <form method="post" action="{% url 'onlinecourse:enroll' course.id %}">
+        {% csrf_token %}
+        <button class="btn" type="submit">Enroll to Start Exam</button>
+    </form>
+</div>
+{% else %}
+<form class="stack" method="post" action="{% url 'onlinecourse:submit' course.id %}">
+    {% csrf_token %}
+    {% for question in course.question_set.all %}
+        <section class="card">
+            <h4 style="margin:0 0 0.55rem;">Q{{ forloop.counter }}. {{ question.question_text }}</h4>
+            <p class="muted" style="margin:0 0 0.4rem; font-size:0.92rem;">Marks: {{ question.grade }}</p>
+            {% for choice in question.choice_set.all %}
+                <label class="choice">
+                    <input type="checkbox" name="choice{{ choice.id }}" value="{{ choice.id }}" />
+                    {{ choice.choice_text }}
+                </label>
+            {% empty %}
+                <p class="muted" style="margin:0;">No choices for this question.</p>
+            {% endfor %}
+        </section>
+    {% empty %}
+        <div class="card"><p style="margin:0;">No questions yet. Add from admin.</p></div>
+    {% endfor %}
+    <div>
+        <button class="btn" type="submit">Submit Exam</button>
+    </div>
+</form>
+{% endif %}
+{% endblock %}
