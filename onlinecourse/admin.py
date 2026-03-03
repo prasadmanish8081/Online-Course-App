@@ -1,6 +1,15 @@
 ﻿from django.contrib import admin
 
-from .models import Course, Lesson, Instructor, Learner, Enrollment, Question, Choice
+from .models import (
+    Choice,
+    Course,
+    Enrollment,
+    Instructor,
+    Learner,
+    Lesson,
+    Question,
+    Submission,
+)
 
 
 class QuestionInline(admin.StackedInline):
@@ -26,6 +35,8 @@ class LessonAdmin(admin.ModelAdmin):
 class CourseAdmin(admin.ModelAdmin):
     inlines = [QuestionInline]
     list_display = ('name',)
+    list_filter = ('instructors',)
+    search_fields = ('name',)
 
 
 admin.site.register(Lesson, LessonAdmin)
@@ -33,3 +44,4 @@ admin.site.register(Question, QuestionAdmin)
 admin.site.register(Instructor)
 admin.site.register(Learner)
 admin.site.register(Enrollment)
+admin.site.register(Submission)

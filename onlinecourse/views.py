@@ -59,18 +59,20 @@ def show_exam_result(request, course_id, submission_id):
 
     selected_choice_ids = set(submission.choices.values_list('id', flat=True))
 
-    total_grade = 0
-    earned_grade = 0
+    total = 0
+    possible = 0
     for question in course.question_set.all():
-        total_grade += question.grade
-        earned_grade += question.is_get_score(selected_choice_ids)
+        possible += question.grade
+        total += question.is_get_score(selected_choice_ids)
 
-    grade_percent = round((earned_grade / total_grade) * 100, 2) if total_grade else 0
+    grade_percent = round((total / possible) * 100, 2) if possible else 0
 
     return render(request, 'onlinecourse/exam_result_bootstrap.html', {
         'course': course,
         'submission': submission,
-        'grade_percent': grade_percent,
         'selected_choice_ids': selected_choice_ids,
+        'total': total,
+        'possible': possible,
+        'grade_percent': grade_percent,
         'is_passed': grade_percent >= 50,
     })

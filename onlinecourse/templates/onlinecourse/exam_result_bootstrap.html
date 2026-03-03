@@ -8,6 +8,7 @@
     {% else %}
         <p style="margin:0.2rem 0 0.5rem; color:var(--bad); font-weight:700;">Keep practicing. You can retake the exam.</p>
     {% endif %}
+    <p style="margin:0 0 0.45rem;"><strong>Marks:</strong> {{ total }} / {{ possible }}</p>
     <p style="margin:0; font-size:1.1rem;"><strong>Score:</strong>
         {% if grade_percent >= 80 %}
             <span style="color:var(--ok);">{{ grade_percent }}%</span>
